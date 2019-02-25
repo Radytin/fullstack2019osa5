@@ -1,7 +1,7 @@
 const Blogform = ({ onSubmit, handleChange, value}) => {
     return (
       <div>
-        <h2>Luo uusi muistiinpano</h2>
+        <h2>Luo uusi blog</h2>
   
         <form onSubmit={onSubmit}>
           <input
