@@ -1,42 +1,41 @@
 
-import axios from 'axios'
-const baseUrl = '/api/blogs'
+import React, { useState } from 'react'
+import Blogs from './components/Blogs'
+import Notification from './components/Notification'
+import Auth from './components/Auth'
+import blogService from './services/blogs'
 
-let token = null
+const App = () => {
+  const [notificationMessage, setNotificationMessage] = useState('')
+  const [notificationClass, setNotificationClass] = useState('')
+  const [user, setUser] = useState(null)
 
-const setToken = newToken => { 
-  token = `bearer ${newToken}`
-}
-
-
-
-const getAll = () => {
-  const request = axios.get(baseUrl)
-  return request.then(response => response.data)
-}
-
-const create = async newObject => {
-  const config = {
-     headers: { Authorization: token }, 
-     }
-  const response = await axios.post(baseUrl, newObject, config) 
-  return response.data
-}
-
-const like = async ( props ) => {
-  const config = {
-    headers: { Authorization: token },
+  const handleNotification = (notClass, notMessage) => {
+    setNotificationClass(notClass)
+    setNotificationMessage(notMessage)
+    setTimeout(() => {
+      setNotificationClass(null)
+      setNotificationMessage(null)
+    }, 5000)
   }
-  const response = await axios.put(baseUrl.concat(`/${props.blogId}`), props.blog, config)
-  return response.data
-}
 
-const remove = async ( props ) => {
-  const config = {
-    headers: { Authorization: token }
+  const handleUser = (user) => {
+    setUser(user)
+    blogService.setUser(user ? user : '')
   }
-  const response = await axios.delete(baseUrl.concat(`/${props.blogId}`), config)
-  return response.data
+
+  const blogs = () => {
+    return <Blogs notHandler={handleNotification} userId={user.id} />
+  }
+
+  return (
+    <div>
+      <h2>blogs</h2>
+      <Notification notMessage={notificationMessage} notClass={notificationClass} />
+      <Auth userHandler={handleUser} notHandler={handleNotification} />
+      { (user ? blogs() : null) }
+    </div>
+  )
 }
 
-export default { getAll, create, update, setToken,like,remove }
+export default App

@@ -3,6 +3,7 @@ import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import loginForm  from './components/Loginform'
+import  { useField } from './hooks'
 
 
 const [username, setUsername] = useState('')  
@@ -54,6 +55,7 @@ const App = () => {
   }, [])
 
 
+  const username = useField('text')
   const loginForm = () => {
     const hideWhenVisible = { display: loginVisible ? 'none' : '' }
     const showWhenVisible = { display: loginVisible ? '' : 'none' }
