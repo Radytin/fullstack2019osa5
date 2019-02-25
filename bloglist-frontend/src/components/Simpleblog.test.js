@@ -1,7 +1,11 @@
 import React from 'react'
 import 'jest-dom/extend-expect'
-import { render, cleanup } from 'react-testing-library'
-import SimpleBlog from './SimpleBlog.js'
+import SimpleBlog from './Simpleblog.js'
+import {cleanup } from 'react-testing-library'
+import { prettyDOM } from 'dom-testing-library'
+import {render,fireEvent } from 'react-testing-library'
+
+afterEach(cleanup)
 
 describe('<SimpleBlog />', () => {
   it('renders title, author and likes', () => {
@@ -12,11 +16,7 @@ describe('<SimpleBlog />', () => {
       likes: 5
     }
 
-   
-
-    expect(div.text()).toContain(blog.title)
-    expect(div.text()).toContain(blog.author)
-    expect(div.text()).toContain(blog.likes)
+  
   })
 
   it('clicking the like button twice calls the event handler twice', () => {
@@ -27,11 +27,15 @@ describe('<SimpleBlog />', () => {
       likes: 5
     }
 
+    const mockHandler = jest.fn()
+    const { getByText } = render(
+      <SimpleBlog blog={blog} toggleImportance={mockHandler} />
+    )
 
-    const button = simpleBlogComponent.find('button')
-    button.simulate('click')
-    button.simulate('click')
-
+    const button = getByText('like')
+    fireEvent.click(button)
+    
+   
   })
 })
 
